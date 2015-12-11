@@ -52,14 +52,6 @@ plot(stlf(AirPassengers, lambda=0))
 decomp <- stl(USAccDeaths,s.window="periodic")
 plot(forecast(decomp))
 
-# TBATS forecasts
-fit <- tbats(USAccDeaths, use.parallel=FALSE)
-plot(forecast(fit))
-
-taylor.fit <- tbats(taylor)
-plot(forecast(taylor.fit))
-```
-
 ## License
 
 This package is free and open source software, licensed under GPL (>= 2).
