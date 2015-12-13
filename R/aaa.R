@@ -47,3 +47,12 @@ print.tbats <- function(...) {
 }
 
 
+nnetar <- function(...) {
+  notAvailableError("nnetar")
+}
+
+
+forecast.nnetar <- function(...) {
+  notAvailableError("forecast.nnetar")
+}
+

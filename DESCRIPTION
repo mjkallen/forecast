@@ -5,7 +5,7 @@ Description: Methods and tools for displaying and analysing
              univariate time series forecasts including exponential smoothing
              via state space models and automatic ARIMA modelling.
 Depends: R (>= 3.0.2), stats, graphics, zoo, timeDate
-Imports: tseries, fracdiff, nnet, colorspace, parallel
+Imports: tseries, fracdiff, colorspace, parallel
 Suggests: testthat, fpp
 LazyData: yes
 ByteCompile: TRUE
