@@ -408,32 +408,32 @@ etsmodel <- function(y, errortype, trendtype, seasontype, damped,
 
 #  } else if(solver=="optim_c"){
 
-    env <- etsTargetFunctionInit(par=par, y=y, nstate=nstate, errortype=errortype, trendtype=trendtype,
-        seasontype=seasontype, damped=damped, par.noopt=par.noopt, lowerb=lower, upperb=upper,
-        opt.crit=opt.crit, nmse=as.integer(nmse), bounds=bounds, m=m,pnames=names(par),pnames2=names(par.noopt))
-
-    fred <- .Call("etsNelderMead", par, env, -Inf,
-        sqrt(.Machine$double.eps), 1.0, 0.5, 2.0, trace, maxit, package="forecast")
-
-    fit.par <- fred$par
-
-    names(fit.par) <- names(par)
+#     env <- etsTargetFunctionInit(par=par, y=y, nstate=nstate, errortype=errortype, trendtype=trendtype,
+#         seasontype=seasontype, damped=damped, par.noopt=par.noopt, lowerb=lower, upperb=upper,
+#         opt.crit=opt.crit, nmse=as.integer(nmse), bounds=bounds, m=m,pnames=names(par),pnames2=names(par.noopt))
+# 
+#     fred <- .Call("etsNelderMead", par, env, -Inf,
+#         sqrt(.Machine$double.eps), 1.0, 0.5, 2.0, trace, maxit, package="forecast")
+# 
+#     fit.par <- fred$par
+# 
+#     names(fit.par) <- names(par)
 
   # } else { #if(solver=="optim")
 
-  #   # Optimize parameters and state
-  #   if(length(par)==1)
-  #     method <- "Brent"
-  #   else
-  #   	method <- "Nelder-Mead"
+    # Optimize parameters and state
+    if(length(par)==1)
+      method <- "Brent"
+    else
+    	method <- "Nelder-Mead"
 
-  #   fred <- optim(par,lik,method=method,y=y,nstate=nstate, errortype=errortype, trendtype=trendtype,
-  #       seasontype=seasontype, damped=damped, par.noopt=par.noopt, lowerb=lower, upperb=upper,
-  #       opt.crit=opt.crit, nmse=nmse, bounds=bounds, m=m,pnames=names(par),pnames2=names(par.noopt),
-  #       control=list(maxit=maxit))
+    fred <- optim(par,lik,method=method,y=y,nstate=nstate, errortype=errortype, trendtype=trendtype,
+        seasontype=seasontype, damped=damped, par.noopt=par.noopt, lowerb=lower, upperb=upper,
+        opt.crit=opt.crit, nmse=nmse, bounds=bounds, m=m,pnames=names(par),pnames2=names(par.noopt),
+        control=list(maxit=maxit))
 
-  #   fit.par <- fred$par
-  #   names(fit.par) <- names(par)
+    fit.par <- fred$par
+    names(fit.par) <- names(par)
   # }
 
 #-------------------------------------------------
@@ -485,95 +485,7 @@ etsTargetFunctionInit <- function(par,y,nstate,errortype,trendtype,seasontype,da
     opt.crit,nmse,bounds,m,pnames,pnames2)
 {
 
-  names(par) <- pnames
-  names(par.noopt) <- pnames2
-  alpha <- c(par["alpha"],par.noopt["alpha"])["alpha"]
-  if(is.na(alpha))
-    stop("alpha problem!")
-  if(trendtype!="N")
-  {
-    beta <- c(par["beta"],par.noopt["beta"])["beta"]
-    if(is.na(beta))
-      stop("beta Problem!")
-  }
-  else
-    beta <- NULL
-  if(seasontype!="N")
-  {
-    gamma <- c(par["gamma"],par.noopt["gamma"])["gamma"]
-    if(is.na(gamma))
-      stop("gamma Problem!")
-  }
-  else
-  {
-    m <- 1
-    gamma <- NULL
-  }
-  if(damped)
-  {
-    phi <- c(par["phi"],par.noopt["phi"])["phi"]
-    if(is.na(phi))
-      stop("phi Problem!")
-  }
-  else
-    phi <- NULL
-
-  #determine which values to optimize and which ones are given by the user/not needed
-  optAlpha <- !is.null(alpha)
-  optBeta <- !is.null(beta)
-  optGamma <- !is.null(gamma)
-  optPhi <- !is.null(phi)
-
-  givenAlpha <- FALSE
-  givenBeta <- FALSE
-  givenGamma <- FALSE
-  givenPhi <- FALSE
-
-  if(!is.null(par.noopt["alpha"])) if(!is.na(par.noopt["alpha"])) {
-      optAlpha <- FALSE
-      givenAlpha <- TRUE
-    }
-  if(!is.null(par.noopt["beta"])) if(!is.na(par.noopt["beta"])) {
-      optBeta <- FALSE
-      givenBeta <- TRUE
-    }
-  if(!is.null(par.noopt["gamma"])) if(!is.na(par.noopt["gamma"])) {
-      optGamma <- FALSE
-      givenGamma <- TRUE
-    }
-  if(!is.null(par.noopt["phi"])) if(!is.na(par.noopt["phi"])) {
-      optPhi <- FALSE
-      givenPhi <- TRUE
-    }
-
-
-  if(!damped)
-    phi <- 1;
-  if(trendtype == "N")
-    beta <- 0;
-  if(seasontype == "N")
-    gamma <- 0;
-
-#  cat("alpha: ", alpha)
-#  cat(" beta: ", beta)
-#  cat(" gamma: ", gamma)
-#  cat(" phi: ", phi, "\n")
-#
-#  cat("useAlpha: ", useAlpha)
-#  cat(" useBeta: ", useBeta)
-#  cat(" useGamma: ", useGamma)
-#  cat(" usePhi: ", usePhi, "\n")
-
-  env <- new.env()
-
-  res <- .Call("etsTargetFunctionInit", y=y, nstate=nstate, errortype=switch(errortype,"A"=1,"M"=2),
-      trendtype=switch(trendtype,"N"=0,"A"=1,"M"=2), seasontype=switch(seasontype,"N"=0,"A"=1,"M"=2),
-      damped=damped, lowerb=lowerb, upperb=upperb,
-      opt.crit=opt.crit, nmse=as.integer(nmse), bounds=bounds, m=m,
-      optAlpha, optBeta, optGamma, optPhi,
-      givenAlpha, givenBeta, givenGamma, givenPhi,
-      alpha, beta, gamma, phi, env, package="forecast")
-  res
+  notAvailableError("etsTargetFunctionInit")
 }
 
 

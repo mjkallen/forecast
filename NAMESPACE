@@ -4,7 +4,7 @@ importFrom(tseries,adf.test,pp.test,kpss.test)
 importFrom(zoo,rollmean, as.Date, as.yearqtr)
 importFrom(timeDate, as.timeDate, isBizday, difftimeDate, Easter)
 importFrom(nnet,nnet)
-import(parallel,Rcpp)
+import(parallel)
 
 importFrom("grDevices", "gray", "heat.colors")
 importFrom("graphics", "abline", "axis", "grid", "layout", "lines",
