@@ -1,9 +1,6 @@
 #forecast
-[![Travis-CI Build Status](https://travis-ci.org/robjhyndman/forecast.svg?branch=master)](https://travis-ci.org/robjhyndman/forecast)
-[![Coverage Status](https://coveralls.io/repos/robjhyndman/forecast/badge.svg?branch=master&service=github)](https://coveralls.io/r/robjhyndman/forecast?branch=master)
-[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/forecast)](http://cran.r-project.org/package=forecast)
-[![Downloads](http://cranlogs.r-pkg.org/badges/forecast)](http://cran.rstudio.com/package=forecast)
-[![Pending Pull-Requests](http://githubbadges.herokuapp.com/robjhyndman/forecast/pulls.svg?style=flat)](https://github.com/robjhyndman/forecast/pulls)
+
+**NOTE**: this is a modified version of the *forecast* package without the (T)BATS functionality and a pure R implementation of `ets()`. The `nnetar()` function has also been removed.
 
 The R package *forecast* provides methods and tools for displaying and analysing univariate time series forecasts including exponential smoothing via state space models and automatic ARIMA modelling.
 
